@@ -3,228 +3,378 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENTROPY — The Internet is Being Consumed</title>
+<title>ENTROPY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'JetBrains Mono',monospace;color:#fff}
-canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
-canvas#graph{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
-#ui{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;display:flex;flex-direction:column;align-items:center}
-#header{text-align:center;padding:24px 16px 0;pointer-events:auto}
-#title{font-size:clamp(14px,3vw,22px);letter-spacing:8px;color:#ff2200;text-shadow:0 0 30px rgba(255,34,0,.6),0 0 60px rgba(255,34,0,.3);animation:flicker 4s infinite alternate}
-#global{font-size:clamp(28px,6vw,56px);font-weight:700;margin-top:8px;letter-spacing:2px}
-#global .pct{color:#ff4400;text-shadow:0 0 40px rgba(255,68,0,.8)}
-#subtitle{font-size:clamp(10px,1.8vw,14px);color:#666;margin-top:6px;letter-spacing:4px}
-#tooltip{position:fixed;z-index:10;background:rgba(0,0,0,.92);border:1px solid rgba(255,34,0,.4);padding:12px 16px;font-size:12px;pointer-events:none;display:none;max-width:280px;box-shadow:0 0 20px rgba(255,34,0,.2)}
-#tooltip .t-name{font-weight:700;font-size:14px;margin-bottom:4px}
-#tooltip .t-infection{color:#ff4400}
-#tooltip .t-trend{color:#888;font-size:11px;margin-top:4px;font-style:italic}
-#footer{position:fixed;bottom:16px;left:0;width:100%;text-align:center;font-size:10px;color:#333;letter-spacing:3px;z-index:2}
-@keyframes flicker{0%,90%,100%{opacity:1}92%{opacity:.8}95%{opacity:.6}97%{opacity:.9}}
+:root {
+  --bg: #0a0a0a;
+  --surface: #111;
+  --border: #1a1a1a;
+  --border-bright: #2a2a2a;
+  --text: #e0e0e0;
+  --text-dim: #555;
+  --text-muted: #333;
+  --red: #e53e3e;
+  --red-dim: rgba(229,62,62,.15);
+  --orange: #dd6b20;
+  --yellow: #d69e2e;
+  --green: #38a169;
+  --cyan: #4fd1c5;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; background:var(--bg); font-family:'Inter',sans-serif; color:var(--text); overflow:hidden; }
+
+/* Layout */
+#app { display:grid; grid-template-columns:1fr 340px; grid-template-rows:56px 1fr; height:100%; }
+
+/* Top bar */
+#topbar {
+  grid-column:1/-1; display:flex; align-items:center; justify-content:space-between;
+  padding:0 24px; border-bottom:1px solid var(--border);
+  background:rgba(10,10,10,.95); backdrop-filter:blur(10px); z-index:10;
+}
+#topbar .logo { display:flex; align-items:center; gap:12px; }
+#topbar .logo-text { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; letter-spacing:6px; color:var(--text); }
+#topbar .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--red); animation:pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(229,62,62,.4)} 50%{opacity:.7;box-shadow:0 0 0 8px rgba(229,62,62,0)} }
+#topbar .meta { display:flex; align-items:center; gap:20px; font-size:11px; color:var(--text-dim); font-family:'Space Mono',monospace; }
+#topbar .meta a { color:var(--text-dim); text-decoration:none; transition:color .2s; }
+#topbar .meta a:hover { color:var(--text); }
+
+/* Main canvas area */
+#main { position:relative; overflow:hidden; }
+canvas#graph { width:100%; height:100%; display:block; }
+
+/* Big entropy number overlay */
+#entropy-display {
+  position:absolute; top:24px; left:28px; z-index:5;
+}
+#entropy-label { font-size:10px; letter-spacing:4px; color:var(--text-dim); font-family:'Space Mono',monospace; text-transform:uppercase; }
+#entropy-value { font-size:72px; font-weight:700; line-height:1; margin-top:2px; font-family:'Space Mono',monospace; }
+#entropy-unit { font-size:18px; color:var(--text-dim); margin-left:2px; }
+#entropy-subtitle { font-size:11px; color:var(--text-dim); margin-top:6px; font-family:'Space Mono',monospace; }
+
+/* Sidebar */
+#sidebar {
+  border-left:1px solid var(--border); overflow-y:auto; background:var(--surface);
+  display:flex; flex-direction:column;
+}
+#sidebar::-webkit-scrollbar { width:4px; }
+#sidebar::-webkit-scrollbar-thumb { background:var(--border-bright); border-radius:2px; }
+
+#sidebar-header {
+  padding:16px 20px 12px; border-bottom:1px solid var(--border);
+  font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px;
+  color:var(--text-dim); text-transform:uppercase;
+}
+
+.node-card {
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background .15s;
+}
+.node-card:hover { background:rgba(255,255,255,.02); }
+.node-card-top { display:flex; justify-content:space-between; align-items:center; }
+.node-name { font-size:13px; font-weight:600; }
+.node-pct { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; }
+.node-bar { height:2px; background:var(--border); margin-top:8px; border-radius:1px; overflow:hidden; }
+.node-bar-fill { height:100%; border-radius:1px; transition:width .8s ease; }
+.node-trend { font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.4; }
+
+/* Tooltip */
+#tooltip {
+  position:fixed; z-index:20; display:none;
+  background:rgba(17,17,17,.96); border:1px solid var(--border-bright);
+  padding:12px 16px; font-size:12px; max-width:260px;
+  box-shadow:0 8px 32px rgba(0,0,0,.6); border-radius:4px;
+  pointer-events:none;
+}
+#tooltip .tt-name { font-weight:700; font-size:13px; margin-bottom:4px; }
+#tooltip .tt-inf { font-family:'Space Mono',monospace; font-weight:700; }
+#tooltip .tt-trend { color:var(--text-dim); font-size:11px; margin-top:6px; }
+
+/* Mobile */
+@media(max-width:768px){
+  #app { grid-template-columns:1fr; grid-template-rows:48px 1fr 40vh; }
+  #topbar .meta span:not(:first-child) { display:none; }
+  #entropy-value { font-size:48px; }
+  #sidebar { border-left:none; border-top:1px solid var(--border); }
+}
 </style>
 </head>
 <body>
-<canvas id="bg"></canvas>
-<canvas id="graph"></canvas>
-<div id="ui">
-  <div id="header">
-    <div id="title">E N T R O P Y</div>
-    <div id="global">THE INTERNET IS <span class="pct" id="pct">—</span>% CONSUMED</div>
-    <div id="subtitle">REAL-TIME CHAOS INDEX</div>
+<div id="app">
+  <div id="topbar">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      <div class="logo-text">ENTROPY</div>
+    </div>
+    <div class="meta">
+      <span id="status-text">MONITORING</span>
+      <span id="node-count">—</span>
+      <a href="https://x.com/entropyindex" target="_blank">@entropyindex</a>
+      <a href="https://github.com/entropyindex/entropy" target="_blank">github</a>
+    </div>
+  </div>
+
+  <div id="main">
+    <canvas id="graph"></canvas>
+    <div id="entropy-display">
+      <div id="entropy-label">Global Entropy Index</div>
+      <div id="entropy-value"><span id="pct">—</span><span id="entropy-unit">%</span></div>
+      <div id="entropy-subtitle">real-time chaos measurement</div>
+    </div>
+  </div>
+
+  <div id="sidebar">
+    <div id="sidebar-header">Communities</div>
+    <div id="node-list"></div>
   </div>
 </div>
+
 <div id="tooltip">
-  <div class="t-name" id="tt-name"></div>
-  <div class="t-infection" id="tt-inf"></div>
-  <div class="t-trend" id="tt-trend"></div>
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-inf" id="tt-inf"></div>
+  <div class="tt-trend" id="tt-trend"></div>
 </div>
-<div id="footer">ENTROPY INDEX — MONITORING DIGITAL DECAY</div>
 
 <script>
 (function(){
-// --- Background particles ---
-const bgC=document.getElementById('bg'), bgX=bgC.getContext('2d');
-const grC=document.getElementById('graph'), grX=grC.getContext('2d');
-let W,H,dpr,particles=[],state=null,nodes=[],mouseX=-1,mouseY=-1,hoverNode=null;
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+let W, H, dpr;
+let state = null, nodes = [], hoverNode = null, mouseX = -1, mouseY = -1;
+let particles = [];
+let time = 0;
 
 function resize(){
-  dpr=window.devicePixelRatio||1;
-  W=window.innerWidth;H=window.innerHeight;
-  bgC.width=grC.width=W*dpr;bgC.height=grC.height=H*dpr;
-  bgX.scale(dpr,dpr);grX.scale(dpr,dpr);
-  bgC.style.width=grC.style.width=W+'px';
-  bgC.style.height=grC.style.height=H+'px';
+  const rect = canvas.parentElement.getBoundingClientRect();
+  dpr = window.devicePixelRatio || 1;
+  W = rect.width; H = rect.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if(nodes.length) updatePositions();
 }
-window.addEventListener('resize',()=>{resize();initParticles()});
+window.addEventListener('resize', resize);
 
-// Particles
-function initParticles(){
-  particles=[];
-  const count=Math.floor(W*H/4000);
-  for(let i=0;i<count;i++) particles.push({
-    x:Math.random()*W,y:Math.random()*H,
-    vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
-    r:Math.random()*1.5+.5,
-    o:Math.random()*.3+.05
-  });
+// Color based on infection
+function getColor(pct) {
+  if (pct < 30) return { r:56, g:178, b:115, hex:'#38b273' };    // green
+  if (pct < 50) return { r:214, g:158, b:46, hex:'#d69e2e' };     // yellow
+  if (pct < 70) return { r:221, g:107, b:32, hex:'#dd6b20' };     // orange
+  return { r:229, g:62, b:62, hex:'#e53e3e' };                     // red
 }
 
-function drawBg(t){
-  bgX.clearRect(0,0,W,H);
-  bgX.fillStyle='#000';bgX.fillRect(0,0,W,H);
-  for(const p of particles){
-    p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
-    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-    const flicker=p.o*(0.7+0.3*Math.sin(t/1000+p.x));
-    bgX.beginPath();bgX.arc(p.x,p.y,p.r,0,Math.PI*2);
-    bgX.fillStyle=`rgba(255,${30+Math.floor(p.o*40)},0,${flicker})`;
-    bgX.fill();
+function updatePositions(){
+  for(const n of nodes){
+    n.px = n.x * W;
+    n.py = n.y * H;
   }
 }
 
-// --- Graph ---
-function lerpColor(pct){
-  // 0=cyan/white, 100=deep red
-  const t=pct/100;
-  const r=Math.floor(100+155*t);
-  const g=Math.floor(220*(1-t));
-  const b=Math.floor(230*(1-t*1.2));
-  return {r,g:Math.max(0,g),b:Math.max(0,b)};
-}
-
-function drawGraph(t){
-  if(!state)return;
-  grX.clearRect(0,0,W,H);
-
-  // Draw connections
+// Edge particles
+function spawnEdgeParticles(){
+  particles = [];
+  if(!nodes.length) return;
   for(const n of nodes){
     for(const cid of n.connections){
-      const other=nodes.find(o=>o.id===cid);
-      if(!other||other.id>n.id)continue; // draw once
-      const avgInf=(n.infection+other.infection)/200;
-      grX.beginPath();
-      grX.moveTo(n.px,n.py);grX.lineTo(other.px,other.py);
-      const r=Math.floor(255*avgInf),g=Math.floor(60*(1-avgInf));
-      grX.strokeStyle=`rgba(${r},${g},0,${0.08+avgInf*0.15})`;
-      grX.lineWidth=0.5+avgInf*1.5;
-      grX.stroke();
-
-      // Infection particles along edges
-      if(avgInf>0.3){
-        const speed=(t/1000*avgInf)%1;
-        const px2=n.px+(other.px-n.px)*((speed+Math.sin(t/800+n.px)*.1)%1);
-        const py2=n.py+(other.py-n.py)*((speed+Math.sin(t/800+n.py)*.1)%1);
-        grX.beginPath();grX.arc(px2,py2,1.5+avgInf*2,0,Math.PI*2);
-        grX.fillStyle=`rgba(255,${50-Math.floor(avgInf*50)},0,${0.3+avgInf*0.5})`;
-        grX.fill();
+      const other = nodes.find(o => o.id === cid);
+      if(!other || other.id > n.id) continue;
+      const avgInf = (n.infection + other.infection) / 200;
+      if(avgInf > 0.3){
+        const count = Math.ceil(avgInf * 3);
+        for(let i = 0; i < count; i++){
+          particles.push({
+            from: n, to: other,
+            t: Math.random(),
+            speed: 0.002 + avgInf * 0.004,
+            size: 1 + avgInf * 2,
+            inf: avgInf
+          });
+        }
       }
     }
   }
+}
 
-  // Draw nodes
+function draw(ts){
+  time = ts;
+  ctx.clearRect(0, 0, W, H);
+
+  // Subtle grid
+  ctx.strokeStyle = 'rgba(255,255,255,.015)';
+  ctx.lineWidth = 1;
+  const grid = 60;
+  for(let x = 0; x < W; x += grid){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for(let y = 0; y < H; y += grid){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  if(!state) return requestAnimationFrame(draw);
+
+  // Edges
   for(const n of nodes){
-    const inf=n.infection/100;
-    const c=lerpColor(n.infection);
-    const pulse=1+0.12*Math.sin(t/400+n.infection/10)*inf;
-    const baseR=Math.min(W,H)*0.025+inf*Math.min(W,H)*0.02;
-    const r=baseR*pulse;
-    const isHover=hoverNode===n;
+    for(const cid of n.connections){
+      const other = nodes.find(o => o.id === cid);
+      if(!other || other.id > n.id) continue;
+      const avgInf = (n.infection + other.infection) / 200;
+      ctx.beginPath();
+      ctx.moveTo(n.px, n.py);
+      ctx.lineTo(other.px, other.py);
+      ctx.strokeStyle = `rgba(255,255,255,${0.03 + avgInf * 0.06})`;
+      ctx.lineWidth = 0.5 + avgInf;
+      ctx.stroke();
+    }
+  }
 
-    // Outer glow
-    const glow=grX.createRadialGradient(n.px,n.py,r*0.5,n.px,n.py,r*3);
-    glow.addColorStop(0,`rgba(${c.r},${Math.floor(c.g*0.3)},0,${0.15+inf*0.25})`);
-    glow.addColorStop(1,'rgba(0,0,0,0)');
-    grX.beginPath();grX.arc(n.px,n.py,r*3,0,Math.PI*2);
-    grX.fillStyle=glow;grX.fill();
+  // Edge particles
+  for(const p of particles){
+    p.t += p.speed;
+    if(p.t > 1) p.t -= 1;
+    const px = p.from.px + (p.to.px - p.from.px) * p.t;
+    const py = p.from.py + (p.to.py - p.from.py) * p.t;
+    const c = getColor(p.inf * 100);
+    ctx.beginPath();
+    ctx.arc(px, py, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${0.4 + p.inf * 0.4})`;
+    ctx.fill();
+  }
 
-    // Core
-    grX.beginPath();grX.arc(n.px,n.py,r,0,Math.PI*2);
-    grX.fillStyle=`rgba(${c.r},${c.g},${c.b},${0.7+inf*0.3})`;
-    grX.fill();
-    grX.strokeStyle=`rgba(${c.r},${c.g},${c.b},${isHover?1:0.5})`;
-    grX.lineWidth=isHover?2:1;
-    grX.stroke();
+  // Nodes
+  for(const n of nodes){
+    const inf = n.infection / 100;
+    const c = getColor(n.infection);
+    const isHover = hoverNode === n;
+    const baseR = 6 + inf * 18;
+    const pulse = 1 + 0.08 * Math.sin(ts / 600 + n.infection / 5) * inf;
+    const r = baseR * pulse;
+
+    // Glow
+    const grad = ctx.createRadialGradient(n.px, n.py, 0, n.px, n.py, r * 4);
+    grad.addColorStop(0, `rgba(${c.r},${c.g},${c.b},${0.08 + inf * 0.12})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(n.px, n.py, r * 4, 0, Math.PI * 2);
+    ctx.fillStyle = grad; ctx.fill();
+
+    // Ring
+    ctx.beginPath(); ctx.arc(n.px, n.py, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${isHover ? 0.3 : 0.12})`;
+    ctx.fill();
+    ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${isHover ? 0.9 : 0.5})`;
+    ctx.lineWidth = isHover ? 2 : 1;
+    ctx.stroke();
+
+    // Center dot
+    ctx.beginPath(); ctx.arc(n.px, n.py, 2 + inf * 2, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${0.8 + inf * 0.2})`;
+    ctx.fill();
 
     // Label
-    const fs=Math.max(9,Math.min(13,W/100));
-    grX.font=`${isHover?'bold ':''} ${fs}px 'JetBrains Mono'`;
-    grX.textAlign='center';
-    grX.fillStyle=`rgba(255,255,255,${0.6+inf*0.4})`;
-    grX.fillText(n.name,n.px,n.py+r+fs+4);
+    const fs = 10;
+    ctx.font = `${isHover ? '600' : '400'} ${fs}px 'Inter'`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = `rgba(255,255,255,${isHover ? 0.9 : 0.45})`;
+    ctx.fillText(n.name.toUpperCase(), n.px, n.py + r + 16);
 
-    // Infection %
-    grX.font=`bold ${fs-1}px 'JetBrains Mono'`;
-    grX.fillStyle=`rgba(${c.r},${Math.floor(c.g*0.5)},0,0.9)`;
-    grX.fillText(n.infection+'%',n.px,n.py+r+fs*2+6);
+    // Pct under name
+    ctx.font = `700 ${fs}px 'Space Mono'`;
+    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${isHover ? 1 : 0.6})`;
+    ctx.fillText(n.infection + '%', n.px, n.py + r + 28);
   }
+
+  requestAnimationFrame(draw);
 }
 
-// --- Tooltip ---
-const tooltip=document.getElementById('tooltip');
-const ttName=document.getElementById('tt-name');
-const ttInf=document.getElementById('tt-inf');
-const ttTrend=document.getElementById('tt-trend');
-
-document.addEventListener('mousemove',e=>{
-  mouseX=e.clientX;mouseY=e.clientY;
-  hoverNode=null;
+// Tooltip
+const tooltip = document.getElementById('tooltip');
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+  hoverNode = null;
   for(const n of nodes){
-    const dx=mouseX-n.px,dy=mouseY-n.py;
-    if(Math.sqrt(dx*dx+dy*dy)<40){hoverNode=n;break}
+    const dx = mouseX - n.px, dy = mouseY - n.py;
+    if(Math.sqrt(dx*dx+dy*dy) < 30 + n.infection/100*18){ hoverNode = n; break; }
   }
   if(hoverNode){
-    ttName.textContent=hoverNode.name;
-    ttInf.textContent='INFECTION: '+hoverNode.infection+'%';
-    ttTrend.textContent='↳ '+hoverNode.trend;
-    tooltip.style.display='block';
-    tooltip.style.left=(mouseX+16)+'px';
-    tooltip.style.top=(mouseY-16)+'px';
-    const c=lerpColor(hoverNode.infection);
-    tooltip.style.borderColor=`rgba(${c.r},${c.g},${c.b},0.6)`;
+    const c = getColor(hoverNode.infection);
+    document.getElementById('tt-name').textContent = hoverNode.name;
+    document.getElementById('tt-inf').textContent = hoverNode.infection + '% infected';
+    document.getElementById('tt-inf').style.color = c.hex;
+    document.getElementById('tt-trend').textContent = hoverNode.trend;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 16) + 'px';
+    tooltip.style.top = (e.clientY - 10) + 'px';
   } else {
-    tooltip.style.display='none';
+    tooltip.style.display = 'none';
   }
 });
+canvas.addEventListener('mouseleave', () => { hoverNode = null; tooltip.style.display = 'none'; });
 
-// Touch
-document.addEventListener('touchstart',e=>{
-  const touch=e.touches[0];mouseX=touch.clientX;mouseY=touch.clientY;
-  for(const n of nodes){
-    const dx=mouseX-n.px,dy=mouseY-n.py;
-    if(Math.sqrt(dx*dx+dy*dy)<50){hoverNode=n;break}
+// Sidebar
+function renderSidebar(){
+  if(!state) return;
+  const sorted = [...nodes].sort((a,b) => b.infection - a.infection);
+  const list = document.getElementById('node-list');
+  list.innerHTML = '';
+  for(const n of sorted){
+    const c = getColor(n.infection);
+    const card = document.createElement('div');
+    card.className = 'node-card';
+    card.innerHTML = `
+      <div class="node-card-top">
+        <span class="node-name">${n.name}</span>
+        <span class="node-pct" style="color:${c.hex}">${n.infection}%</span>
+      </div>
+      <div class="node-bar"><div class="node-bar-fill" style="width:${n.infection}%;background:${c.hex}"></div></div>
+      <div class="node-trend">${n.trend}</div>
+    `;
+    card.addEventListener('mouseenter', () => { hoverNode = n; });
+    card.addEventListener('mouseleave', () => { hoverNode = null; });
+    list.appendChild(card);
   }
-});
+}
 
-// --- Load state ---
+// Animate entropy counter
+function animateEntropy(target){
+  const el = document.getElementById('pct');
+  const current = parseInt(el.textContent) || 0;
+  if(current === target) return;
+  const diff = target - current;
+  const steps = 30;
+  let step = 0;
+  function tick(){
+    step++;
+    const val = Math.round(current + diff * (step / steps));
+    el.textContent = val;
+    // Color the number
+    const c = getColor(val);
+    el.style.color = c.hex;
+    document.getElementById('entropy-unit').style.color = c.hex;
+    if(step < steps) requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+// Load
 async function loadState(){
-  try{
-    const r=await fetch('world-state.json?t='+Date.now());
-    state=await r.json();
-    nodes=state.nodes.map(n=>({...n,px:n.x*W,py:n.y*H}));
-    document.getElementById('pct').textContent=state.globalEntropy;
-  }catch(e){console.error('Failed to load state',e)}
+  try {
+    const r = await fetch('world-state.json?t=' + Date.now());
+    state = await r.json();
+    nodes = state.nodes.map(n => ({...n, px: 0, py: 0}));
+    updatePositions();
+    spawnEdgeParticles();
+    animateEntropy(state.globalEntropy);
+    document.getElementById('node-count').textContent = state.totalNodes + ' nodes';
+    document.getElementById('status-text').textContent = 'LIVE';
+    renderSidebar();
+  } catch(e) {
+    document.getElementById('status-text').textContent = 'OFFLINE';
+    console.error(e);
+  }
 }
 
-// Recalc positions on resize
-function updatePositions(){
-  if(!nodes.length)return;
-  for(const n of nodes){n.px=n.x*W;n.py=n.y*H}
-}
-
-// --- Loop ---
-function loop(t){
-  drawBg(t);
-  updatePositions();
-  drawGraph(t);
-  requestAnimationFrame(loop);
-}
-
-resize();initParticles();
-loadState().then(()=>requestAnimationFrame(loop));
-setInterval(loadState,30000);
+resize();
+loadState().then(() => requestAnimationFrame(draw));
+setInterval(loadState, 30000);
 })();
 </script>
 </body>
