@@ -14,65 +14,43 @@
   --border-bright: #2a2a2a;
   --text: #e0e0e0;
   --text-dim: #555;
-  --text-muted: #333;
   --red: #e53e3e;
-  --red-dim: rgba(229,62,62,.15);
   --orange: #dd6b20;
   --yellow: #d69e2e;
   --green: #38a169;
-  --cyan: #4fd1c5;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100%; height:100%; background:var(--bg); font-family:'Inter',sans-serif; color:var(--text); overflow:hidden; }
 
-/* Layout */
-#app { display:grid; grid-template-columns:1fr 340px; grid-template-rows:56px 1fr; height:100%; }
+#app { display:grid; grid-template-columns:1fr 320px; grid-template-rows:56px 1fr; height:100%; }
 
-/* Top bar */
 #topbar {
   grid-column:1/-1; display:flex; align-items:center; justify-content:space-between;
   padding:0 24px; border-bottom:1px solid var(--border);
   background:rgba(10,10,10,.95); backdrop-filter:blur(10px); z-index:10;
 }
 #topbar .logo { display:flex; align-items:center; gap:12px; }
-#topbar .logo-text { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; letter-spacing:6px; color:var(--text); }
+#topbar .logo-text { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; letter-spacing:6px; }
 #topbar .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--red); animation:pulse-dot 2s ease-in-out infinite; }
 @keyframes pulse-dot { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(229,62,62,.4)} 50%{opacity:.7;box-shadow:0 0 0 8px rgba(229,62,62,0)} }
 #topbar .meta { display:flex; align-items:center; gap:20px; font-size:11px; color:var(--text-dim); font-family:'Space Mono',monospace; }
 #topbar .meta a { color:var(--text-dim); text-decoration:none; transition:color .2s; }
 #topbar .meta a:hover { color:var(--text); }
 
-/* Main canvas area */
 #main { position:relative; overflow:hidden; }
-canvas#graph { width:100%; height:100%; display:block; }
+canvas#graph { width:100%; height:100%; display:block; cursor:crosshair; }
 
-/* Big entropy number overlay */
-#entropy-display {
-  position:absolute; top:24px; left:28px; z-index:5;
-}
-#entropy-label { font-size:10px; letter-spacing:4px; color:var(--text-dim); font-family:'Space Mono',monospace; text-transform:uppercase; }
+#entropy-display { position:absolute; top:24px; left:28px; z-index:5; }
+#entropy-label { font-size:10px; letter-spacing:4px; color:var(--text-dim); font-family:'Space Mono',monospace; }
 #entropy-value { font-size:72px; font-weight:700; line-height:1; margin-top:2px; font-family:'Space Mono',monospace; }
 #entropy-unit { font-size:18px; color:var(--text-dim); margin-left:2px; }
 #entropy-subtitle { font-size:11px; color:var(--text-dim); margin-top:6px; font-family:'Space Mono',monospace; }
 
-/* Sidebar */
-#sidebar {
-  border-left:1px solid var(--border); overflow-y:auto; background:var(--surface);
-  display:flex; flex-direction:column;
-}
+#sidebar { border-left:1px solid var(--border); overflow-y:auto; background:var(--surface); display:flex; flex-direction:column; }
 #sidebar::-webkit-scrollbar { width:4px; }
 #sidebar::-webkit-scrollbar-thumb { background:var(--border-bright); border-radius:2px; }
-
-#sidebar-header {
-  padding:16px 20px 12px; border-bottom:1px solid var(--border);
-  font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px;
-  color:var(--text-dim); text-transform:uppercase;
-}
-
-.node-card {
-  padding:14px 20px; border-bottom:1px solid var(--border);
-  cursor:pointer; transition:background .15s;
-}
+#sidebar-header { padding:16px 20px 12px; border-bottom:1px solid var(--border); font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--text-dim); }
+.node-card { padding:14px 20px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; }
 .node-card:hover { background:rgba(255,255,255,.02); }
 .node-card-top { display:flex; justify-content:space-between; align-items:center; }
 .node-name { font-size:13px; font-weight:600; }
@@ -81,19 +59,16 @@ canvas#graph { width:100%; height:100%; display:block; }
 .node-bar-fill { height:100%; border-radius:1px; transition:width .8s ease; }
 .node-trend { font-size:11px; color:var(--text-dim); margin-top:6px; line-height:1.4; }
 
-/* Tooltip */
 #tooltip {
   position:fixed; z-index:20; display:none;
   background:rgba(17,17,17,.96); border:1px solid var(--border-bright);
   padding:12px 16px; font-size:12px; max-width:260px;
-  box-shadow:0 8px 32px rgba(0,0,0,.6); border-radius:4px;
-  pointer-events:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.6); border-radius:4px; pointer-events:none;
 }
 #tooltip .tt-name { font-weight:700; font-size:13px; margin-bottom:4px; }
 #tooltip .tt-inf { font-family:'Space Mono',monospace; font-weight:700; }
 #tooltip .tt-trend { color:var(--text-dim); font-size:11px; margin-top:6px; }
 
-/* Mobile */
 @media(max-width:768px){
   #app { grid-template-columns:1fr; grid-template-rows:48px 1fr 40vh; }
   #topbar .meta span:not(:first-child) { display:none; }
@@ -116,7 +91,6 @@ canvas#graph { width:100%; height:100%; display:block; }
       <a href="https://github.com/entropyindex/entropy" target="_blank">github</a>
     </div>
   </div>
-
   <div id="main">
     <canvas id="graph"></canvas>
     <div id="entropy-display">
@@ -125,13 +99,11 @@ canvas#graph { width:100%; height:100%; display:block; }
       <div id="entropy-subtitle">real-time chaos measurement</div>
     </div>
   </div>
-
   <div id="sidebar">
     <div id="sidebar-header">Communities</div>
     <div id="node-list"></div>
   </div>
 </div>
-
 <div id="tooltip">
   <div class="tt-name" id="tt-name"></div>
   <div class="tt-inf" id="tt-inf"></div>
@@ -140,12 +112,258 @@ canvas#graph { width:100%; height:100%; display:block; }
 
 <script>
 (function(){
+
+// ===== PIXEL SPRITES =====
+// Each sprite is a 12x14 grid. 0=empty, 1=outline, 2=fill, 3=eye, 4=accent
+const SPRITES = {
+  'twitter-main': { // bird-person
+    grid: [
+      [0,0,0,0,0,1,1,0,0,0,0,0],
+      [0,0,0,0,1,2,2,1,0,0,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,3,2,2,3,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,1,1,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [1,4,2,2,2,2,2,2,2,2,4,1],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [120,170,220],
+    accent: [80,140,200]
+  },
+  'crypto-twitter': { // coin-head robot
+    grid: [
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,1,4,4,4,4,4,4,1,0,0],
+      [0,1,4,4,4,4,4,4,4,4,1,0],
+      [0,1,4,3,4,4,4,4,3,4,1,0],
+      [0,1,4,4,4,4,4,4,4,4,1,0],
+      [0,0,1,4,4,1,1,4,4,1,0,0],
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [1,1,2,2,4,2,2,4,2,2,1,1],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [240,190,50],
+    accent: [255,215,0]
+  },
+  'ai-twitter': { // robot
+    grid: [
+      [0,0,0,0,0,1,1,0,0,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,1,2,3,3,2,2,3,3,2,1,0],
+      [0,1,2,3,3,2,2,3,3,2,1,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,0,1,2,2,4,4,2,2,1,0,0],
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,0,0,1,2,2,1,0,0,0,0],
+      [0,0,1,1,2,2,2,2,1,1,0,0],
+      [0,1,4,1,2,2,2,2,1,4,1,0],
+      [0,0,1,1,2,2,2,2,1,1,0,0],
+      [0,0,0,1,2,0,0,2,1,0,0,0],
+      [0,0,0,1,1,0,0,1,1,0,0,0],
+    ],
+    baseColor: [100,200,255],
+    accent: [0,180,255]
+  },
+  'politics': { // suited figure
+    grid: [
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,3,2,2,3,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,1,1,1,4,4,4,4,1,1,1,0],
+      [1,2,2,4,4,4,4,4,4,2,2,1],
+      [0,1,2,2,4,4,4,4,2,2,1,0],
+      [0,0,1,2,4,4,4,4,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [100,100,140],
+    accent: [140,50,50]
+  },
+  'reddit-politics': { // angry alien
+    grid: [
+      [0,0,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,1,1,4,1,1,0,0,0,0],
+      [0,0,1,2,2,2,2,2,1,0,0,0],
+      [0,1,2,2,2,2,2,2,2,1,0,0],
+      [0,1,2,3,2,2,2,3,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,1,1,1,2,1,0,0,0],
+      [0,0,0,1,1,1,1,1,0,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [255,100,50],
+    accent: [255,69,0]
+  },
+  'reddit-all': { // alien
+    grid: [
+      [0,0,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,1,1,4,1,1,0,0,0,0],
+      [0,0,1,2,2,2,2,2,1,0,0,0],
+      [0,1,2,2,2,2,2,2,2,1,0,0],
+      [0,1,2,3,2,2,2,3,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,2,2,2,1,0,0,0],
+      [0,0,0,1,1,1,1,1,0,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [255,130,60],
+    accent: [255,90,0]
+  },
+  'reddit-ml': { // scientist
+    grid: [
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,4,3,2,2,3,4,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,0,0],
+      [0,1,4,4,4,4,4,4,4,4,1,0],
+      [0,1,4,4,4,4,4,4,4,4,1,0],
+      [0,0,1,4,4,4,4,4,4,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [180,180,220],
+    accent: [220,220,255]
+  },
+  'gaming': { // controller-head
+    grid: [
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,1,2,3,2,2,2,3,2,2,1,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,1,2,2,4,4,4,4,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [80,200,120],
+    accent: [50,220,100]
+  },
+  'twitch': { // streamer
+    grid: [
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,3,2,2,3,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,4,4,2,1,0,0,0],
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [1,1,0,1,2,2,2,2,1,0,1,1],
+      [1,4,1,2,2,2,2,2,2,1,4,1],
+      [0,1,1,2,2,2,2,2,2,1,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [145,70,255],
+    accent: [170,100,255]
+  },
+  'tech-twitter': { // coder
+    grid: [
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,4,3,2,2,3,4,1,0,0],
+      [0,0,1,4,4,2,2,4,4,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,4,2,2,4,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [60,180,180],
+    accent: [80,220,220]
+  },
+  'wallstreetbets': { // ape/trader
+    grid: [
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [1,2,2,3,2,2,2,3,2,2,2,1],
+      [1,2,2,2,2,2,2,2,2,2,2,1],
+      [0,1,2,2,2,4,4,2,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,1,1,1,1,1,0,0,0],
+      [0,0,1,2,4,2,2,4,2,1,0,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,1,2,2,2,2,2,2,2,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [200,170,50],
+    accent: [255,200,0]
+  },
+  'media': { // news anchor
+    grid: [
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,3,2,2,3,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,0,1,2,2,2,2,1,0,0,0],
+      [0,0,0,0,1,1,1,1,0,0,0,0],
+      [0,1,1,4,4,4,4,4,4,1,1,0],
+      [1,2,4,4,4,4,4,4,4,4,2,1],
+      [0,1,2,4,4,4,4,4,4,2,1,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,2,2,2,2,1,0,0],
+      [0,0,1,2,2,0,0,2,2,1,0,0],
+      [0,0,1,1,1,0,0,1,1,1,0,0],
+    ],
+    baseColor: [180,180,180],
+    accent: [200,60,60]
+  }
+};
+
 const canvas = document.getElementById('graph');
 const ctx = canvas.getContext('2d');
 let W, H, dpr;
 let state = null, nodes = [], hoverNode = null, mouseX = -1, mouseY = -1;
-let particles = [];
-let time = 0;
+let edgeParticles = [];
+let frameCount = 0;
 
 function resize(){
   const rect = canvas.parentElement.getBoundingClientRect();
@@ -158,39 +376,135 @@ function resize(){
 }
 window.addEventListener('resize', resize);
 
-// Color based on infection
 function getColor(pct) {
-  if (pct < 30) return { r:56, g:178, b:115, hex:'#38b273' };    // green
-  if (pct < 50) return { r:214, g:158, b:46, hex:'#d69e2e' };     // yellow
-  if (pct < 70) return { r:221, g:107, b:32, hex:'#dd6b20' };     // orange
-  return { r:229, g:62, b:62, hex:'#e53e3e' };                     // red
+  if (pct < 30) return { r:56, g:178, b:115, hex:'#38b273' };
+  if (pct < 50) return { r:214, g:158, b:46, hex:'#d69e2e' };
+  if (pct < 70) return { r:221, g:107, b:32, hex:'#dd6b20' };
+  return { r:229, g:62, b:62, hex:'#e53e3e' };
 }
 
 function updatePositions(){
-  for(const n of nodes){
-    n.px = n.x * W;
-    n.py = n.y * H;
+  for(const n of nodes){ n.px = n.x * W; n.py = n.y * H; }
+}
+
+// Draw a pixel sprite at x,y with given scale
+function drawSprite(spriteData, x, y, scale, infection, isHover, t) {
+  const grid = spriteData.grid;
+  const base = spriteData.baseColor;
+  const accent = spriteData.accent;
+  const inf = infection / 100;
+  const rows = grid.length;
+  const cols = grid[0].length;
+  const ox = x - (cols * scale) / 2;
+  const oy = y - (rows * scale) / 2;
+
+  // Glitch offset for high infection
+  let glitchX = 0, glitchY = 0;
+  if(inf > 0.6 && Math.random() < inf * 0.08){
+    glitchX = (Math.random() - 0.5) * scale * 3;
+  }
+  if(inf > 0.8 && Math.random() < 0.03){
+    glitchY = (Math.random() - 0.5) * scale * 2;
+  }
+
+  // Shadow/glow under sprite
+  const c = getColor(infection);
+  ctx.shadowColor = `rgba(${c.r},${c.g},${c.b},${0.2 + inf * 0.4})`;
+  ctx.shadowBlur = 10 + inf * 20;
+  ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 4;
+
+  for(let r = 0; r < rows; r++){
+    for(let cl = 0; cl < cols; cl++){
+      const v = grid[r][cl];
+      if(v === 0) continue;
+
+      let color;
+      if(v === 1) {
+        // Outline — gets redder with infection
+        const rr = Math.floor(30 + inf * 200);
+        const gg = Math.floor(30 * (1 - inf));
+        color = `rgb(${rr},${gg},${gg})`;
+      } else if(v === 2) {
+        // Fill — lerp from base color toward red
+        const rr = Math.floor(base[0] + (220 - base[0]) * inf * 0.7);
+        const gg = Math.floor(base[1] * (1 - inf * 0.6));
+        const bb = Math.floor(base[2] * (1 - inf * 0.7));
+        color = `rgb(${rr},${gg},${bb})`;
+      } else if(v === 3) {
+        // Eyes — glow red at high infection
+        if(inf > 0.5){
+          const pulse = 0.7 + 0.3 * Math.sin(t / 300 + infection);
+          color = `rgba(255,${Math.floor(40*(1-inf))},0,${pulse})`;
+        } else {
+          color = '#fff';
+        }
+      } else if(v === 4) {
+        // Accent
+        const rr = Math.floor(accent[0] + (200 - accent[0]) * inf * 0.5);
+        const gg = Math.floor(accent[1] * (1 - inf * 0.5));
+        const bb = Math.floor(accent[2] * (1 - inf * 0.6));
+        color = `rgb(${rr},${gg},${bb})`;
+      }
+
+      // Scanline glitch for high infection
+      let rowGlitch = 0;
+      if(inf > 0.7 && r % 3 === Math.floor(t/200) % 3){
+        rowGlitch = Math.sin(t/100 + r) * scale * inf;
+      }
+
+      ctx.fillStyle = color;
+      ctx.fillRect(
+        ox + cl * scale + glitchX + rowGlitch,
+        oy + r * scale + glitchY,
+        scale, scale
+      );
+    }
+  }
+
+  // Reset shadow
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+
+  // Corruption static overlay for very high infection
+  if(inf > 0.75){
+    const staticCount = Math.floor(inf * 15);
+    for(let i = 0; i < staticCount; i++){
+      const sx = ox + Math.random() * cols * scale;
+      const sy = oy + Math.random() * rows * scale;
+      ctx.fillStyle = `rgba(255,${Math.floor(Math.random()*60)},0,${Math.random()*0.5})`;
+      ctx.fillRect(sx, sy, scale, scale);
+    }
+  }
+
+  // Hover outline
+  if(isHover){
+    ctx.strokeStyle = `rgba(255,255,255,0.6)`;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(ox - 4, oy - 4, cols * scale + 8, rows * scale + 8);
   }
 }
 
-// Edge particles
+// Idle animation — bob up and down
+function getIdleBob(t, offset){
+  return Math.sin(t / 800 + offset) * 3;
+}
+
 function spawnEdgeParticles(){
-  particles = [];
-  if(!nodes.length) return;
+  edgeParticles = [];
   for(const n of nodes){
     for(const cid of n.connections){
       const other = nodes.find(o => o.id === cid);
       if(!other || other.id > n.id) continue;
       const avgInf = (n.infection + other.infection) / 200;
-      if(avgInf > 0.3){
+      if(avgInf > 0.25){
         const count = Math.ceil(avgInf * 3);
         for(let i = 0; i < count; i++){
-          particles.push({
-            from: n, to: other,
-            t: Math.random(),
-            speed: 0.002 + avgInf * 0.004,
-            size: 1 + avgInf * 2,
-            inf: avgInf
+          edgeParticles.push({
+            from: n, to: other, t: Math.random(),
+            speed: 0.001 + avgInf * 0.003,
+            size: 1 + avgInf * 1.5, inf: avgInf
           });
         }
       }
@@ -199,13 +513,13 @@ function spawnEdgeParticles(){
 }
 
 function draw(ts){
-  time = ts;
+  frameCount++;
   ctx.clearRect(0, 0, W, H);
 
-  // Subtle grid
-  ctx.strokeStyle = 'rgba(255,255,255,.015)';
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,.02)';
   ctx.lineWidth = 1;
-  const grid = 60;
+  const grid = 50;
   for(let x = 0; x < W; x += grid){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
   for(let y = 0; y < H; y += grid){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
 
@@ -217,68 +531,56 @@ function draw(ts){
       const other = nodes.find(o => o.id === cid);
       if(!other || other.id > n.id) continue;
       const avgInf = (n.infection + other.infection) / 200;
+      const bobA = getIdleBob(ts, n.infection);
+      const bobB = getIdleBob(ts, other.infection);
       ctx.beginPath();
-      ctx.moveTo(n.px, n.py);
-      ctx.lineTo(other.px, other.py);
-      ctx.strokeStyle = `rgba(255,255,255,${0.03 + avgInf * 0.06})`;
+      ctx.moveTo(n.px, n.py + bobA);
+      ctx.lineTo(other.px, other.py + bobB);
+      const c = getColor(avgInf * 100);
+      ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${0.06 + avgInf * 0.12})`;
       ctx.lineWidth = 0.5 + avgInf;
+      ctx.setLineDash(avgInf > 0.5 ? [] : [4, 4]);
       ctx.stroke();
+      ctx.setLineDash([]);
     }
   }
 
   // Edge particles
-  for(const p of particles){
+  for(const p of edgeParticles){
     p.t += p.speed;
     if(p.t > 1) p.t -= 1;
+    const bobA = getIdleBob(ts, p.from.infection);
+    const bobB = getIdleBob(ts, p.to.infection);
     const px = p.from.px + (p.to.px - p.from.px) * p.t;
-    const py = p.from.py + (p.to.py - p.from.py) * p.t;
+    const py = (p.from.py + bobA) + ((p.to.py + bobB) - (p.from.py + bobA)) * p.t;
     const c = getColor(p.inf * 100);
     ctx.beginPath();
     ctx.arc(px, py, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${0.4 + p.inf * 0.4})`;
+    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${0.3 + p.inf * 0.5})`;
     ctx.fill();
   }
 
-  // Nodes
+  // Sprites
+  const spriteScale = Math.max(3, Math.min(5, W / 320));
   for(const n of nodes){
-    const inf = n.infection / 100;
-    const c = getColor(n.infection);
+    const spriteData = SPRITES[n.id];
+    if(!spriteData) continue;
+    const bob = getIdleBob(ts, n.infection);
     const isHover = hoverNode === n;
-    const baseR = 6 + inf * 18;
-    const pulse = 1 + 0.08 * Math.sin(ts / 600 + n.infection / 5) * inf;
-    const r = baseR * pulse;
+    drawSprite(spriteData, n.px, n.py + bob, spriteScale, n.infection, isHover, ts);
 
-    // Glow
-    const grad = ctx.createRadialGradient(n.px, n.py, 0, n.px, n.py, r * 4);
-    grad.addColorStop(0, `rgba(${c.r},${c.g},${c.b},${0.08 + inf * 0.12})`);
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.beginPath(); ctx.arc(n.px, n.py, r * 4, 0, Math.PI * 2);
-    ctx.fillStyle = grad; ctx.fill();
-
-    // Ring
-    ctx.beginPath(); ctx.arc(n.px, n.py, r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${isHover ? 0.3 : 0.12})`;
-    ctx.fill();
-    ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${isHover ? 0.9 : 0.5})`;
-    ctx.lineWidth = isHover ? 2 : 1;
-    ctx.stroke();
-
-    // Center dot
-    ctx.beginPath(); ctx.arc(n.px, n.py, 2 + inf * 2, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${0.8 + inf * 0.2})`;
-    ctx.fill();
-
-    // Label
-    const fs = 10;
-    ctx.font = `${isHover ? '600' : '400'} ${fs}px 'Inter'`;
+    // Name label below
+    const labelY = n.py + bob + 50;
+    ctx.font = `${isHover ? '600' : '400'} 10px 'Inter'`;
     ctx.textAlign = 'center';
-    ctx.fillStyle = `rgba(255,255,255,${isHover ? 0.9 : 0.45})`;
-    ctx.fillText(n.name.toUpperCase(), n.px, n.py + r + 16);
+    ctx.fillStyle = `rgba(255,255,255,${isHover ? 0.9 : 0.4})`;
+    ctx.fillText(n.name.toUpperCase(), n.px, labelY);
 
-    // Pct under name
-    ctx.font = `700 ${fs}px 'Space Mono'`;
+    // Infection pct
+    const c = getColor(n.infection);
+    ctx.font = `700 10px 'Space Mono'`;
     ctx.fillStyle = `rgba(${c.r},${c.g},${c.b},${isHover ? 1 : 0.6})`;
-    ctx.fillText(n.infection + '%', n.px, n.py + r + 28);
+    ctx.fillText(n.infection + '%', n.px, labelY + 14);
   }
 
   requestAnimationFrame(draw);
@@ -292,7 +594,7 @@ canvas.addEventListener('mousemove', e => {
   hoverNode = null;
   for(const n of nodes){
     const dx = mouseX - n.px, dy = mouseY - n.py;
-    if(Math.sqrt(dx*dx+dy*dy) < 30 + n.infection/100*18){ hoverNode = n; break; }
+    if(Math.sqrt(dx*dx+dy*dy) < 40){ hoverNode = n; break; }
   }
   if(hoverNode){
     const c = getColor(hoverNode.infection);
@@ -333,7 +635,6 @@ function renderSidebar(){
   }
 }
 
-// Animate entropy counter
 function animateEntropy(target){
   const el = document.getElementById('pct');
   const current = parseInt(el.textContent) || 0;
@@ -345,7 +646,6 @@ function animateEntropy(target){
     step++;
     const val = Math.round(current + diff * (step / steps));
     el.textContent = val;
-    // Color the number
     const c = getColor(val);
     el.style.color = c.hex;
     document.getElementById('entropy-unit').style.color = c.hex;
@@ -354,7 +654,6 @@ function animateEntropy(target){
   tick();
 }
 
-// Load
 async function loadState(){
   try {
     const r = await fetch('world-state.json?t=' + Date.now());
@@ -368,7 +667,6 @@ async function loadState(){
     renderSidebar();
   } catch(e) {
     document.getElementById('status-text').textContent = 'OFFLINE';
-    console.error(e);
   }
 }
 
