@@ -486,8 +486,72 @@ function drawFrame(t){
     ctx.fillRect(0,sy,GW,1);
   }
 
+  // ===== HOVER INFO PANEL =====
+  if(hoverBuilding&&state){
+    const node=state.nodes.find(n=>n.id===hoverBuilding.id);
+    if(node){
+      const inf2=node.infection;
+      const c2=getColor(inf2);
+      const panelW=140;
+      const panelH=48;
+      // Position panel near the building but keep on screen
+      let px=hoverBuilding.bx+hoverBuilding.w+6;
+      let py=hoverBuilding.by-10;
+      if(px+panelW>GW-4) px=hoverBuilding.bx-panelW-6;
+      if(py+panelH>GH-20) py=GH-20-panelH;
+      if(py<24) py=24;
+
+      // Panel background
+      ctx.fillStyle='rgba(10,10,20,0.92)';
+      ctx.fillRect(px,py,panelW,panelH);
+      ctx.strokeStyle='rgba(80,80,120,0.6)';
+      ctx.lineWidth=1;
+      ctx.strokeRect(px-0.5,py-0.5,panelW+1,panelH+1);
+
+      // Accent line on left
+      ctx.fillStyle=c2;
+      ctx.fillRect(px,py,2,panelH);
+
+      // Name
+      drawText(node.name,px+6,py+4,'#e0e0e0',1);
+
+      // Infection bar
+      ctx.fillStyle='#1a1a1a';
+      ctx.fillRect(px+6,py+14,panelW-14,4);
+      ctx.fillStyle=c2;
+      ctx.fillRect(px+6,py+14,Math.floor((panelW-14)*inf2/100),4);
+
+      // Percentage
+      drawText(inf2+'% INFECTED',px+6,py+22,c2,1);
+
+      // Trend text (truncate to fit)
+      const trend=node.trend.length>24?node.trend.slice(0,22)+'..':node.trend;
+      drawText(trend,px+6,py+32,'#888',1);
+    }
+  }
+
   requestAnimationFrame(drawFrame);
 }
+
+// ===== MOUSE HOVER =====
+let hoverBuilding=null;
+canvas.addEventListener('mousemove',e=>{
+  const rect=canvas.getBoundingClientRect();
+  // Map screen coords to game coords
+  const mx=(e.clientX-rect.left)/rect.width*GW;
+  const my=(e.clientY-rect.top)/rect.height*GH;
+  hoverBuilding=null;
+  for(const b of BUILDINGS){
+    // Hit area includes building + character below it
+    if(mx>=b.bx-4&&mx<=b.bx+b.w+4&&my>=b.by-8&&my<=b.by+b.h+20){
+      hoverBuilding=b;
+      canvas.style.cursor='pointer';
+      break;
+    }
+  }
+  if(!hoverBuilding) canvas.style.cursor='crosshair';
+});
+canvas.addEventListener('mouseleave',()=>{hoverBuilding=null;canvas.style.cursor='crosshair';});
 
 // ===== LOAD DATA =====
 async function loadState(){
