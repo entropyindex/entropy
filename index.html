@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENTROPY — The Internet is Being Consumed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'JetBrains Mono',monospace;color:#fff}
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+canvas#graph{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+#ui{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;display:flex;flex-direction:column;align-items:center}
+#header{text-align:center;padding:24px 16px 0;pointer-events:auto}
+#title{font-size:clamp(14px,3vw,22px);letter-spacing:8px;color:#ff2200;text-shadow:0 0 30px rgba(255,34,0,.6),0 0 60px rgba(255,34,0,.3);animation:flicker 4s infinite alternate}
+#global{font-size:clamp(28px,6vw,56px);font-weight:700;margin-top:8px;letter-spacing:2px}
+#global .pct{color:#ff4400;text-shadow:0 0 40px rgba(255,68,0,.8)}
+#subtitle{font-size:clamp(10px,1.8vw,14px);color:#666;margin-top:6px;letter-spacing:4px}
+#tooltip{position:fixed;z-index:10;background:rgba(0,0,0,.92);border:1px solid rgba(255,34,0,.4);padding:12px 16px;font-size:12px;pointer-events:none;display:none;max-width:280px;box-shadow:0 0 20px rgba(255,34,0,.2)}
+#tooltip .t-name{font-weight:700;font-size:14px;margin-bottom:4px}
+#tooltip .t-infection{color:#ff4400}
+#tooltip .t-trend{color:#888;font-size:11px;margin-top:4px;font-style:italic}
+#footer{position:fixed;bottom:16px;left:0;width:100%;text-align:center;font-size:10px;color:#333;letter-spacing:3px;z-index:2}
+@keyframes flicker{0%,90%,100%{opacity:1}92%{opacity:.8}95%{opacity:.6}97%{opacity:.9}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<canvas id="graph"></canvas>
+<div id="ui">
+  <div id="header">
+    <div id="title">E N T R O P Y</div>
+    <div id="global">THE INTERNET IS <span class="pct" id="pct">—</span>% CONSUMED</div>
+    <div id="subtitle">REAL-TIME CHAOS INDEX</div>
+  </div>
+</div>
+<div id="tooltip">
+  <div class="t-name" id="tt-name"></div>
+  <div class="t-infection" id="tt-inf"></div>
+  <div class="t-trend" id="tt-trend"></div>
+</div>
+<div id="footer">ENTROPY INDEX — MONITORING DIGITAL DECAY</div>
+
+<script>
+(function(){
+// --- Background particles ---
+const bgC=document.getElementById('bg'), bgX=bgC.getContext('2d');
+const grC=document.getElementById('graph'), grX=grC.getContext('2d');
+let W,H,dpr,particles=[],state=null,nodes=[],mouseX=-1,mouseY=-1,hoverNode=null;
+
+function resize(){
+  dpr=window.devicePixelRatio||1;
+  W=window.innerWidth;H=window.innerHeight;
+  bgC.width=grC.width=W*dpr;bgC.height=grC.height=H*dpr;
+  bgX.scale(dpr,dpr);grX.scale(dpr,dpr);
+  bgC.style.width=grC.style.width=W+'px';
+  bgC.style.height=grC.style.height=H+'px';
+}
+window.addEventListener('resize',()=>{resize();initParticles()});
+
+// Particles
+function initParticles(){
+  particles=[];
+  const count=Math.floor(W*H/4000);
+  for(let i=0;i<count;i++) particles.push({
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+    r:Math.random()*1.5+.5,
+    o:Math.random()*.3+.05
+  });
+}
+
+function drawBg(t){
+  bgX.clearRect(0,0,W,H);
+  bgX.fillStyle='#000';bgX.fillRect(0,0,W,H);
+  for(const p of particles){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    const flicker=p.o*(0.7+0.3*Math.sin(t/1000+p.x));
+    bgX.beginPath();bgX.arc(p.x,p.y,p.r,0,Math.PI*2);
+    bgX.fillStyle=`rgba(255,${30+Math.floor(p.o*40)},0,${flicker})`;
+    bgX.fill();
+  }
+}
+
+// --- Graph ---
+function lerpColor(pct){
+  // 0=cyan/white, 100=deep red
+  const t=pct/100;
+  const r=Math.floor(100+155*t);
+  const g=Math.floor(220*(1-t));
+  const b=Math.floor(230*(1-t*1.2));
+  return {r,g:Math.max(0,g),b:Math.max(0,b)};
+}
+
+function drawGraph(t){
+  if(!state)return;
+  grX.clearRect(0,0,W,H);
+
+  // Draw connections
+  for(const n of nodes){
+    for(const cid of n.connections){
+      const other=nodes.find(o=>o.id===cid);
+      if(!other||other.id>n.id)continue; // draw once
+      const avgInf=(n.infection+other.infection)/200;
+      grX.beginPath();
+      grX.moveTo(n.px,n.py);grX.lineTo(other.px,other.py);
+      const r=Math.floor(255*avgInf),g=Math.floor(60*(1-avgInf));
+      grX.strokeStyle=`rgba(${r},${g},0,${0.08+avgInf*0.15})`;
+      grX.lineWidth=0.5+avgInf*1.5;
+      grX.stroke();
+
+      // Infection particles along edges
+      if(avgInf>0.3){
+        const speed=(t/1000*avgInf)%1;
+        const px2=n.px+(other.px-n.px)*((speed+Math.sin(t/800+n.px)*.1)%1);
+        const py2=n.py+(other.py-n.py)*((speed+Math.sin(t/800+n.py)*.1)%1);
+        grX.beginPath();grX.arc(px2,py2,1.5+avgInf*2,0,Math.PI*2);
+        grX.fillStyle=`rgba(255,${50-Math.floor(avgInf*50)},0,${0.3+avgInf*0.5})`;
+        grX.fill();
+      }
+    }
+  }
+
+  // Draw nodes
+  for(const n of nodes){
+    const inf=n.infection/100;
+    const c=lerpColor(n.infection);
+    const pulse=1+0.12*Math.sin(t/400+n.infection/10)*inf;
+    const baseR=Math.min(W,H)*0.025+inf*Math.min(W,H)*0.02;
+    const r=baseR*pulse;
+    const isHover=hoverNode===n;
+
+    // Outer glow
+    const glow=grX.createRadialGradient(n.px,n.py,r*0.5,n.px,n.py,r*3);
+    glow.addColorStop(0,`rgba(${c.r},${Math.floor(c.g*0.3)},0,${0.15+inf*0.25})`);
+    glow.addColorStop(1,'rgba(0,0,0,0)');
+    grX.beginPath();grX.arc(n.px,n.py,r*3,0,Math.PI*2);
+    grX.fillStyle=glow;grX.fill();
+
+    // Core
+    grX.beginPath();grX.arc(n.px,n.py,r,0,Math.PI*2);
+    grX.fillStyle=`rgba(${c.r},${c.g},${c.b},${0.7+inf*0.3})`;
+    grX.fill();
+    grX.strokeStyle=`rgba(${c.r},${c.g},${c.b},${isHover?1:0.5})`;
+    grX.lineWidth=isHover?2:1;
+    grX.stroke();
+
+    // Label
+    const fs=Math.max(9,Math.min(13,W/100));
+    grX.font=`${isHover?'bold ':''} ${fs}px 'JetBrains Mono'`;
+    grX.textAlign='center';
+    grX.fillStyle=`rgba(255,255,255,${0.6+inf*0.4})`;
+    grX.fillText(n.name,n.px,n.py+r+fs+4);
+
+    // Infection %
+    grX.font=`bold ${fs-1}px 'JetBrains Mono'`;
+    grX.fillStyle=`rgba(${c.r},${Math.floor(c.g*0.5)},0,0.9)`;
+    grX.fillText(n.infection+'%',n.px,n.py+r+fs*2+6);
+  }
+}
+
+// --- Tooltip ---
+const tooltip=document.getElementById('tooltip');
+const ttName=document.getElementById('tt-name');
+const ttInf=document.getElementById('tt-inf');
+const ttTrend=document.getElementById('tt-trend');
+
+document.addEventListener('mousemove',e=>{
+  mouseX=e.clientX;mouseY=e.clientY;
+  hoverNode=null;
+  for(const n of nodes){
+    const dx=mouseX-n.px,dy=mouseY-n.py;
+    if(Math.sqrt(dx*dx+dy*dy)<40){hoverNode=n;break}
+  }
+  if(hoverNode){
+    ttName.textContent=hoverNode.name;
+    ttInf.textContent='INFECTION: '+hoverNode.infection+'%';
+    ttTrend.textContent='↳ '+hoverNode.trend;
+    tooltip.style.display='block';
+    tooltip.style.left=(mouseX+16)+'px';
+    tooltip.style.top=(mouseY-16)+'px';
+    const c=lerpColor(hoverNode.infection);
+    tooltip.style.borderColor=`rgba(${c.r},${c.g},${c.b},0.6)`;
+  } else {
+    tooltip.style.display='none';
+  }
+});
+
+// Touch
+document.addEventListener('touchstart',e=>{
+  const touch=e.touches[0];mouseX=touch.clientX;mouseY=touch.clientY;
+  for(const n of nodes){
+    const dx=mouseX-n.px,dy=mouseY-n.py;
+    if(Math.sqrt(dx*dx+dy*dy)<50){hoverNode=n;break}
+  }
+});
+
+// --- Load state ---
+async function loadState(){
+  try{
+    const r=await fetch('world-state.json?t='+Date.now());
+    state=await r.json();
+    nodes=state.nodes.map(n=>({...n,px:n.x*W,py:n.y*H}));
+    document.getElementById('pct').textContent=state.globalEntropy;
+  }catch(e){console.error('Failed to load state',e)}
+}
+
+// Recalc positions on resize
+function updatePositions(){
+  if(!nodes.length)return;
+  for(const n of nodes){n.px=n.x*W;n.py=n.y*H}
+}
+
+// --- Loop ---
+function loop(t){
+  drawBg(t);
+  updatePositions();
+  drawGraph(t);
+  requestAnimationFrame(loop);
+}
+
+resize();initParticles();
+loadState().then(()=>requestAnimationFrame(loop));
+setInterval(loadState,30000);
+})();
+</script>
+</body>
+</html>

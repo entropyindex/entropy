@@ -1,0 +1,11 @@
+{
+  "name": "entropy-engine",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node run.js"
+  },
+  "dependencies": {
+    "twitter-api-v2": "^1.15.0"
+  }
+}

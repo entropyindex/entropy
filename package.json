@@ -1,0 +1,16 @@
+{
+  "name": "entropy",
+  "version": "1.0.0",
+  "description": "real-time chaos index for the internet",
+  "main": "engine/run.js",
+  "scripts": {
+    "scan": "node engine/run.js",
+    "serve": "npx serve ."
+  },
+  "keywords": ["entropy", "chaos", "internet", "visualization"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/entropyindex/entropy"
+  }
+}

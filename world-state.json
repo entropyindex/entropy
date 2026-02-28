@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-02-27T23:31:00Z",
+  "globalEntropy": 63,
+  "totalNodes": 12,
+  "infectedNodes": 12,
+  "nodes": [
+    {
+      "id": "twitter-main",
+      "name": "Twitter/X",
+      "infection": 78,
+      "trend": "AI takeover discourse spiraling",
+      "x": 0.5,
+      "y": 0.35,
+      "connections": ["crypto-twitter", "ai-twitter", "politics", "media"]
+    },
+    {
+      "id": "crypto-twitter",
+      "name": "Crypto Twitter",
+      "infection": 91,
+      "trend": "$ENTROPY memecoin rug pull chaos",
+      "x": 0.25,
+      "y": 0.2,
+      "connections": ["twitter-main", "wallstreetbets", "tech-twitter"]
+    },
+    {
+      "id": "ai-twitter",
+      "name": "AI Twitter",
+      "infection": 72,
+      "trend": "AGI timeline wars heating up",
+      "x": 0.72,
+      "y": 0.18,
+      "connections": ["twitter-main", "tech-twitter", "reddit-ml"]
+    },
+    {
+      "id": "politics",
+      "name": "Politics",
+      "infection": 88,
+      "trend": "Election conspiracy theories multiplying",
+      "x": 0.15,
+      "y": 0.55,
+      "connections": ["twitter-main", "reddit-politics", "media"]
+    },
+    {
+      "id": "reddit-politics",
+      "name": "r/politics",
+      "infection": 82,
+      "trend": "Doomer threads hitting all-time high",
+      "x": 0.08,
+      "y": 0.75,
+      "connections": ["politics", "reddit-all"]
+    },
+    {
+      "id": "reddit-all",
+      "name": "Reddit",
+      "infection": 55,
+      "trend": "Subreddit drama cascade event",
+      "x": 0.4,
+      "y": 0.7,
+      "connections": ["reddit-politics", "reddit-ml", "gaming", "wallstreetbets"]
+    },
+    {
+      "id": "reddit-ml",
+      "name": "r/MachineLearning",
+      "infection": 45,
+      "trend": "Benchmark fraud accusations",
+      "x": 0.65,
+      "y": 0.45,
+      "connections": ["ai-twitter", "reddit-all", "tech-twitter"]
+    },
+    {
+      "id": "gaming",
+      "name": "Gaming",
+      "infection": 38,
+      "trend": "Review bomb campaign escalating",
+      "x": 0.55,
+      "y": 0.8,
+      "connections": ["reddit-all", "twitch"]
+    },
+    {
+      "id": "twitch",
+      "name": "Twitch",
+      "infection": 29,
+      "trend": "Streamer cancellation wave",
+      "x": 0.78,
+      "y": 0.72,
+      "connections": ["gaming", "twitter-main"]
+    },
+    {
+      "id": "tech-twitter",
+      "name": "Tech Twitter",
+      "infection": 61,
+      "trend": "Mass layoff panic spreading",
+      "x": 0.85,
+      "y": 0.4,
+      "connections": ["crypto-twitter", "ai-twitter", "reddit-ml"]
+    },
+    {
+      "id": "wallstreetbets",
+      "name": "WallStreetBets",
+      "infection": 76,
+      "trend": "Short squeeze mania returns",
+      "x": 0.3,
+      "y": 0.45,
+      "connections": ["crypto-twitter", "reddit-all"]
+    },
+    {
+      "id": "media",
+      "name": "News Media",
+      "infection": 67,
+      "trend": "Outrage cycle acceleration detected",
+      "x": 0.18,
+      "y": 0.35,
+      "connections": ["twitter-main", "politics"]
+    }
+  ]
+}
