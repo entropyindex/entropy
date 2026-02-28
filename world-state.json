@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-02-28T07:00:00Z",
-  "globalEntropy": 74,
+  "timestamp": "2026-02-28T07:30:00Z",
+  "globalEntropy": 89,
   "totalNodes": 12,
   "infectedNodes": 12,
   "nodes": [
     {
       "id": "twitter-main",
       "name": "Twitter/X",
-      "infection": 86,
-      "trend": "Trump bans Anthropic from federal use",
+      "infection": 97,
+      "trend": "Israel and US launch strikes on Iran — Tehran explosions",
       "x": 0.5,
       "y": 0.35,
       "connections": ["crypto-twitter", "ai-twitter", "politics", "media"]
@@ -16,8 +16,8 @@
     {
       "id": "crypto-twitter",
       "name": "Crypto Twitter",
-      "infection": 85,
-      "trend": "AI sector uncertainty rattling markets",
+      "infection": 92,
+      "trend": "BTC flash crash on Iran strike news",
       "x": 0.25,
       "y": 0.2,
       "connections": ["twitter-main", "wallstreetbets", "tech-twitter"]
@@ -25,8 +25,8 @@
     {
       "id": "ai-twitter",
       "name": "AI Twitter",
-      "infection": 96,
-      "trend": "Anthropic refuses military access — banned from all federal agencies",
+      "infection": 88,
+      "trend": "Anthropic federal ban overshadowed by war",
       "x": 0.72,
       "y": 0.18,
       "connections": ["twitter-main", "tech-twitter", "reddit-ml"]
@@ -34,8 +34,8 @@
     {
       "id": "politics",
       "name": "Politics",
-      "infection": 91,
-      "trend": "Hegseth labels Anthropic a national security risk",
+      "infection": 99,
+      "trend": "Israel declares state of emergency — US involved in strikes",
       "x": 0.15,
       "y": 0.55,
       "connections": ["twitter-main", "reddit-politics", "media"]
@@ -43,8 +43,8 @@
     {
       "id": "reddit-politics",
       "name": "r/politics",
-      "infection": 84,
-      "trend": "OpenAI takes the military deal Anthropic refused",
+      "infection": 95,
+      "trend": "Megathread: US-Israel strike on Iran live updates",
       "x": 0.08,
       "y": 0.75,
       "connections": ["politics", "reddit-all"]
@@ -52,8 +52,8 @@
     {
       "id": "reddit-all",
       "name": "Reddit",
-      "infection": 62,
-      "trend": "Anthropic vs OpenAI ethics debate everywhere",
+      "infection": 88,
+      "trend": "Every sub talking about Iran right now",
       "x": 0.4,
       "y": 0.7,
       "connections": ["reddit-politics", "reddit-ml", "gaming", "wallstreetbets"]
@@ -61,8 +61,8 @@
     {
       "id": "reddit-ml",
       "name": "r/MachineLearning",
-      "infection": 78,
-      "trend": "Autonomous weapons oversight debate exploding",
+      "infection": 61,
+      "trend": "Anthropic drama fading as war takes over",
       "x": 0.65,
       "y": 0.45,
       "connections": ["ai-twitter", "reddit-all", "tech-twitter"]
@@ -70,8 +70,8 @@
     {
       "id": "gaming",
       "name": "Gaming",
-      "infection": 31,
-      "trend": "AI military discourse leaking into gaming subs",
+      "infection": 52,
+      "trend": "Gamers doom-scrolling Iran news instead of playing",
       "x": 0.55,
       "y": 0.8,
       "connections": ["reddit-all", "twitch"]
@@ -79,8 +79,8 @@
     {
       "id": "twitch",
       "name": "Twitch",
-      "infection": 24,
-      "trend": "Political streamers covering AI ban live",
+      "infection": 68,
+      "trend": "News streams spiking — HasanAbi type channels exploding",
       "x": 0.78,
       "y": 0.72,
       "connections": ["gaming", "twitter-main"]
@@ -88,8 +88,8 @@
     {
       "id": "tech-twitter",
       "name": "Tech Twitter",
-      "infection": 82,
-      "trend": "OpenAI classified network deployment confirmed",
+      "infection": 74,
+      "trend": "Oil prices and tech sector impact analysis flooding TL",
       "x": 0.85,
       "y": 0.4,
       "connections": ["crypto-twitter", "ai-twitter", "reddit-ml"]
@@ -97,8 +97,8 @@
     {
       "id": "wallstreetbets",
       "name": "WallStreetBets",
-      "infection": 73,
-      "trend": "Defense tech plays surging after OpenAI deal",
+      "infection": 94,
+      "trend": "Oil calls printing — futures circuit breaker watch",
       "x": 0.3,
       "y": 0.45,
       "connections": ["crypto-twitter", "reddit-all"]
@@ -106,8 +106,8 @@
     {
       "id": "media",
       "name": "News Media",
-      "infection": 88,
-      "trend": "AI companies split on military cooperation",
+      "infection": 99,
+      "trend": "BREAKING: US and Israel conduct strikes on Iran",
       "x": 0.18,
       "y": 0.35,
       "connections": ["twitter-main", "politics"]
