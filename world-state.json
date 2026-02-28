@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-02-28T06:00:00Z",
-  "globalEntropy": 63,
+  "timestamp": "2026-02-28T06:30:00Z",
+  "globalEntropy": 71,
   "totalNodes": 12,
   "infectedNodes": 12,
   "nodes": [
     {
       "id": "twitter-main",
       "name": "Twitter/X",
-      "infection": 78,
-      "trend": "Algorithm changes sparking outrage",
+      "infection": 82,
+      "trend": "Anthropic military policy reversal backlash",
       "x": 0.5,
       "y": 0.35,
       "connections": ["crypto-twitter", "ai-twitter", "politics", "media"]
@@ -16,8 +16,8 @@
     {
       "id": "crypto-twitter",
       "name": "Crypto Twitter",
-      "infection": 91,
-      "trend": "BTC volatility panic across CT",
+      "infection": 88,
+      "trend": "BTC dipping below key support level",
       "x": 0.25,
       "y": 0.2,
       "connections": ["twitter-main", "wallstreetbets", "tech-twitter"]
@@ -25,8 +25,8 @@
     {
       "id": "ai-twitter",
       "name": "AI Twitter",
-      "infection": 72,
-      "trend": "AGI timeline debate intensifying",
+      "infection": 94,
+      "trend": "Anthropic drops military use ban — AI safety community in chaos",
       "x": 0.72,
       "y": 0.18,
       "connections": ["twitter-main", "tech-twitter", "reddit-ml"]
@@ -34,8 +34,8 @@
     {
       "id": "politics",
       "name": "Politics",
-      "infection": 88,
-      "trend": "Policy leaks fueling distrust",
+      "infection": 85,
+      "trend": "AI weapons debate enters Congress",
       "x": 0.15,
       "y": 0.55,
       "connections": ["twitter-main", "reddit-politics", "media"]
@@ -43,8 +43,8 @@
     {
       "id": "reddit-politics",
       "name": "r/politics",
-      "infection": 82,
-      "trend": "Doomer threads at all-time high",
+      "infection": 79,
+      "trend": "Defense contractors + AI megathread",
       "x": 0.08,
       "y": 0.75,
       "connections": ["politics", "reddit-all"]
@@ -52,8 +52,8 @@
     {
       "id": "reddit-all",
       "name": "Reddit",
-      "infection": 55,
-      "trend": "Mod drama cascading across subs",
+      "infection": 58,
+      "trend": "Frontpage dominated by Anthropic discourse",
       "x": 0.4,
       "y": 0.7,
       "connections": ["reddit-politics", "reddit-ml", "gaming", "wallstreetbets"]
@@ -61,8 +61,8 @@
     {
       "id": "reddit-ml",
       "name": "r/MachineLearning",
-      "infection": 45,
-      "trend": "Benchmark fraud accusations",
+      "infection": 72,
+      "trend": "Safety researchers questioning Anthropic ethics",
       "x": 0.65,
       "y": 0.45,
       "connections": ["ai-twitter", "reddit-all", "tech-twitter"]
@@ -70,8 +70,8 @@
     {
       "id": "gaming",
       "name": "Gaming",
-      "infection": 38,
-      "trend": "Review bomb over monetization",
+      "infection": 34,
+      "trend": "AI NPCs in games discourse heating up",
       "x": 0.55,
       "y": 0.8,
       "connections": ["reddit-all", "twitch"]
@@ -79,8 +79,8 @@
     {
       "id": "twitch",
       "name": "Twitch",
-      "infection": 29,
-      "trend": "TOS enforcement backlash",
+      "infection": 26,
+      "trend": "Streamers reacting to Anthropic news",
       "x": 0.78,
       "y": 0.72,
       "connections": ["gaming", "twitter-main"]
@@ -88,8 +88,8 @@
     {
       "id": "tech-twitter",
       "name": "Tech Twitter",
-      "infection": 61,
-      "trend": "Layoff wave hitting startups",
+      "infection": 76,
+      "trend": "Former Anthropic employees speaking out",
       "x": 0.85,
       "y": 0.4,
       "connections": ["crypto-twitter", "ai-twitter", "reddit-ml"]
@@ -97,8 +97,8 @@
     {
       "id": "wallstreetbets",
       "name": "WallStreetBets",
-      "infection": 76,
-      "trend": "Short squeeze hype cycle back",
+      "infection": 69,
+      "trend": "Defense tech stocks surging on AI news",
       "x": 0.3,
       "y": 0.45,
       "connections": ["crypto-twitter", "reddit-all"]
@@ -106,8 +106,8 @@
     {
       "id": "media",
       "name": "News Media",
-      "infection": 67,
-      "trend": "Outrage cycle accelerating",
+      "infection": 80,
+      "trend": "AI safety vs national security narrative war",
       "x": 0.18,
       "y": 0.35,
       "connections": ["twitter-main", "politics"]
