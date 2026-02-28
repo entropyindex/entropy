@@ -61,4 +61,23 @@ function calculateEntropy(redditSignals, twitterSignals, community) {
   return { infection, trend: topTrend || 'Low-level noise detected' };
 }
 
+// Spread model: high-chaos nodes infect neighbors
+function calculateSpread(nodes, edges) {
+  const updated = JSON.parse(JSON.stringify(nodes));
+  for (const edge of edges) {
+    const source = updated.find(n => n.id === edge.source);
+    const target = updated.find(n => n.id === edge.target);
+    if (!source || !target) continue;
+    if (source.infection > 70) {
+      const spread = (source.infection - 70) * 0.05 * edge.weight;
+      target.infection = Math.min(100, target.infection + spread);
+    }
+    if (target.infection > 70) {
+      const spread = (target.infection - 70) * 0.05 * edge.weight;
+      source.infection = Math.min(100, source.infection + spread);
+    }
+  }
+  return updated;
+}
+
 module.exports = { calculateEntropy };
