@@ -1,110 +1,112 @@
 <p align="center">
-  <img src="banner.png" width="600" />
+  <img src="demo.png" width="800" />
 </p>
 
 <h1 align="center">ENTROPY</h1>
 
 <p align="center">
-  <strong>the internet has a temperature. we measure it.</strong>
+  <strong>real-time chaos index for the internet</strong>
 </p>
 
 <p align="center">
-  <a href="https://entropyindex.github.io/entropy"><img src="https://img.shields.io/badge/live-infection%20map-ff2200?style=flat-square" /></a>
-  <a href="https://x.com/entropyindex"><img src="https://img.shields.io/badge/X-@entropyindex-white?style=flat-square&logo=x&logoColor=white" /></a>
-  <a href="https://github.com/entropyindex/entropy/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-white?style=flat-square" /></a>
+  <a href="https://entropyindex.github.io/entropy"><img src="https://img.shields.io/badge/⬤_LIVE-infection_map-ff2200?style=for-the-badge" /></a>
+  &nbsp;
+  <a href="https://x.com/entropyindex"><img src="https://img.shields.io/badge/X-@entropyindex-000?style=for-the-badge&logo=x&logoColor=white" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/global_entropy-89%25-ff2200?style=flat-square" />
+  <img src="https://img.shields.io/badge/nodes-12-white?style=flat-square" />
+  <img src="https://img.shields.io/badge/status-CRITICAL-ff2200?style=flat-square" />
+  <img src="https://img.shields.io/badge/license-MIT-white?style=flat-square" />
 </p>
 
 ---
 
-## the idea
+## what is this
 
-every corner of the internet generates chaos — drama, panic, outrage, controversy. it spreads between communities like an infection.
+every corner of the internet generates chaos — drama, panic, hype, outrage. it spreads between communities like an infection.
 
-**entropy** crawls the internet in real-time, scores the chaos, and visualizes it as a living infection map. nodes represent communities. the more chaotic a community gets, the more consumed it becomes. chaos spreads to connected nodes.
+**entropy** tracks 12 internet communities in real-time, scores the chaos, and visualizes it as a living infection map. when every community starts talking about the same thing, entropy spikes. that's convergence.
 
-it's not sentiment analysis. it's a chaos index.
+> it's not sentiment analysis. it's a chaos index.
 
-<p align="center">
-  <img src="pfp.png" width="120" />
-</p>
-
-## how it works
+## how infection is calculated
 
 ```
-twitter ──┐                                    ┌── infection map
-          ├── engine ── chaos scoring ── json ──┤
-reddit  ──┘                                    └── global entropy %
+infection(node) = topic_velocity × community_bleed × sentiment_divergence
 ```
 
-1. **crawl** — pull posts from twitter and reddit across 12 community nodes
-2. **score** — analyze chaos signals: negative sentiment, controversy ratios, engagement spikes, chaos keywords
-3. **spread** — high-infection nodes (>70%) bleed chaos into connected communities
-4. **render** — canvas visualization with real-time infection particles, pulsing nodes, and a global entropy counter
-
-### the 12 nodes
-
-`crypto twitter` · `ai twitter` · `politics` · `gaming` · `reddit` · `tech` · `memes` · `finance` · `drama` · `twitch` · `youtube` · `news`
-
-each one is scored 0–100%. the global entropy index is the weighted average.
-
-### chaos signals
-
-| signal | what it measures |
+| metric | what it measures |
 |--------|-----------------|
-| keyword detection | presence of chaos words (crash, scam, meltdown, riot, etc.) |
-| controversy ratio | reply:like ratio — high ratio = divisive |
-| upvote ratio | reddit posts with <65% upvotes = controversial |
-| engagement spikes | abnormal comment counts relative to baseline |
-| cross-infection | chaos spreading between connected communities |
+| `topic_velocity` | rate of crisis-keyword posts vs. baseline |
+| `community_bleed` | % of foreign topics invading a community |
+| `sentiment_divergence` | how far current mood deviates from 30-day average |
+
+when all three spike across multiple nodes simultaneously — that's not noise. that's the internet converging on one thing.
+
+## the 12 nodes
+
+```
+  TWITTER ──── CRYPTO ──── AI ──── POLITICS
+     │            │         │          │
+  REDDIT ──── WSB ──── R/ML ──── GAMING
+     │            │         │          │
+  TWITCH ──── TECH ──── R/POL ──── NEWS
+```
+
+each node scored `0-100%`. the **global entropy index** is the weighted average × convergence multiplier.
+
+`> 70%` CRITICAL &nbsp; `> 50%` ELEVATED &nbsp; `> 30%` MODERATE &nbsp; `< 30%` STABLE
+
+## features
+
+- **infection map** — pixel-art canvas with buildings, NPCs, weather effects
+- **connection lines** — visible chaos spreading between connected communities
+- **infection particles** — red dots traveling along connections in real-time
+- **click to inspect** — click any node for detailed breakdown + connections
+- **news ticker** — scrolling headlines from the most infected communities
+- **keyboard nav** — `Tab` to cycle nodes, `Esc` to close
+- **walking NPCs** — characters wander between buildings, glitch at high infection
+- **weather system** — rain and smoke intensify with entropy level
 
 ## run it
 
 ```bash
-# view the map
+# view the map (no build step, raw html)
 open index.html
 
-# run the chaos engine (requires api keys)
-cd engine
-npm install
-node run.js
+# run the chaos engine
+cd engine && npm install && node run.js
 ```
 
-the engine writes `world-state.json` → the frontend reads it. no build step, no framework.
+the engine writes `world-state.json` → the frontend reads it. no framework. no build step. raw canvas.
 
-## project structure
+## architecture
 
 ```
-entropy/
-├── index.html            # infection map (canvas, vanilla js)
-├── world-state.json      # current chaos state
-├── engine/
-│   ├── run.js            # main crawler loop
-│   ├── twitter.js        # twitter chaos scanner
-│   ├── reddit.js         # reddit chaos scanner
-│   ├── entropy.js        # infection scoring + spread model
-│   ├── history.js        # historical tracking
-│   └── config.js         # api keys, node definitions
-├── docs/
-│   └── ARCHITECTURE.md   # technical deep dive
-├── pfp.png
-└── banner.png
+engine/
+├── run.js          # main loop — crawl → score → spread → write
+├── twitter.js      # twitter chaos scanner (v2 api)
+├── reddit.js       # reddit chaos scanner (public json)
+├── entropy.js      # infection scoring + cross-community spread
+├── history.js      # historical tracking
+└── config.js       # node definitions, api keys
+
+index.html          # the entire frontend (single file, ~700 lines)
+world-state.json    # current state (engine output → frontend input)
 ```
 
-## stack
+## tech
 
-- **frontend:** vanilla html/css/js + canvas api. no react. no framework. raw.
-- **engine:** node.js
-- **data:** json
-- **apis:** twitter v2, reddit public json
+`canvas api` · `vanilla js` · `node.js` · `twitter v2` · `reddit json` · `zero dependencies (frontend)`
 
 ## contributing
 
-see [CONTRIBUTING.md](CONTRIBUTING.md) — issues and PRs welcome.
-
-## license
-
-[MIT](LICENSE)
+see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
-<p align="center"><sub>order decays. we track it.</sub></p>
+<p align="center">
+  <sub>order decays. we track it.</sub>
+</p>
