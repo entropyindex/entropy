@@ -7,11 +7,43 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;background:#000;overflow:hidden;image-rendering:pixelated;font-family:monospace}
-canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;cursor:none}
+.pixel-cursor{position:fixed;pointer-events:none;z-index:9999;width:24px;height:24px;image-rendering:pixelated}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<canvas id="cur" class="pixel-cursor" width="24" height="24"></canvas>
+<script>
+(function(){
+const cur=document.getElementById('cur'),cx=cur.getContext('2d');
+// Draw pixel crosshair cursor
+cx.imageSmoothingEnabled=false;
+const c='#e0e0e0',s='#000';
+// Arrow shape (12x12 scaled 2x)
+const arrow=[
+[1,0,0,0,0,0,0,0,0,0,0,0],
+[1,1,0,0,0,0,0,0,0,0,0,0],
+[1,2,1,0,0,0,0,0,0,0,0,0],
+[1,2,2,1,0,0,0,0,0,0,0,0],
+[1,2,2,2,1,0,0,0,0,0,0,0],
+[1,2,2,2,2,1,0,0,0,0,0,0],
+[1,2,2,2,2,2,1,0,0,0,0,0],
+[1,2,2,2,2,2,2,1,0,0,0,0],
+[1,2,2,2,2,1,1,1,1,0,0,0],
+[1,2,2,1,2,1,0,0,0,0,0,0],
+[1,1,0,1,2,2,1,0,0,0,0,0],
+[0,0,0,0,1,1,0,0,0,0,0,0],
+];
+for(let y=0;y<arrow.length;y++)for(let x=0;x<arrow[y].length;x++){
+  if(arrow[y][x]===1){cx.fillStyle=s;cx.fillRect(x*2,y*2,2,2);}
+  if(arrow[y][x]===2){cx.fillStyle=c;cx.fillRect(x*2,y*2,2,2);}
+}
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+document.addEventListener('mouseleave',()=>{cur.style.display='none';});
+document.addEventListener('mouseenter',()=>{cur.style.display='block';});
+})();
+</script>
 <script>
 (function(){
 const canvas=document.getElementById('c');
