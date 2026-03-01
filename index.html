@@ -701,10 +701,11 @@ function drawFrame(t){
   drawText(globalEntropy+'%',80+textWidth('CHAOS INDEX: ',1)+2,4,pctColor,1);
   if(state){const nc=state.totalNodes+' NODES';drawText(nc,GW-textWidth(nc,1)-4,4,'#555',1);}
   // X/Twitter icon - small clickable area top-right, below NODES
-  drawText('GITHUB',4,14,'#555',1);
-  drawText('@',GW-textWidth('@ENTROPYINDEX',1)-4,14,'#555',1);
-  drawText('ENTROPYINDEX',GW-textWidth('ENTROPYINDEX',1)-4,14,'#888',1);
   drawText('LIVE',4,12,'#555',1);
+  const ghX=4+textWidth('LIVE',1)+8;
+  drawText('GITHUB',ghX,12,'#444',1);
+  drawText('@',GW-textWidth('@ENTROPYINDEX',1)-4,12,'#444',1);
+  drawText('ENTROPYINDEX',GW-textWidth('ENTROPYINDEX',1)-4,12,'#666',1);
 
   // Bottom bar with ticker
   ctx.fillStyle='rgba(10,10,20,0.88)';ctx.fillRect(0,GH-16,GW,16);
@@ -760,7 +761,7 @@ canvas.addEventListener('click',function(e){
   const sx=(e.clientX-rect.left)/rect.width*GW;
   const sy=(e.clientY-rect.top)/rect.height*GH;
   if(sx>=GW-120&&sy>=10&&sy<=22){window.open('https://x.com/entropyindex','_blank');}
-  if(sx<=50&&sy>=10&&sy<=22){window.open('https://github.com/entropyindex/entropy','_blank');}
+  if(sx>=30&&sx<=80&&sy>=8&&sy<=20){window.open('https://github.com/entropyindex/entropy','_blank');}
 });
 loadState().then(()=>requestAnimationFrame(drawFrame));
 setInterval(loadState,30000);
