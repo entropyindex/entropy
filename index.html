@@ -578,7 +578,8 @@ function drawFrame(t){
   drawText('CHAOS INDEX: ',80,4,'#666',1);
   const pctColor=getColor(globalEntropy);
   drawText(globalEntropy+'%',80+textWidth('CHAOS INDEX: ',1)+2,4,pctColor,1);
-  if(state){const nc=state.totalNodes+' NODES';drawText(nc,GW-textWidth(nc,1)-4,4,'#555',1);}
+  if(state){const nc=state.totalNodes+' NODES';drawText(nc,GW-textWidth(nc,1)-22,4,'#555',1);}
+  drawText('X',GW-8,4,'#888',1);
   drawText('LIVE',4,12,'#555',1);
 
   // Bottom bar with ticker
@@ -629,6 +630,12 @@ initWeather();
 async function loadState(){
   try{const r=await fetch('world-state.json?t='+Date.now());state=await r.json();globalEntropy=state.globalEntropy;}catch(e){console.error(e);}
 }
+canvas.addEventListener('click',function(e){
+  const rect=canvas.getBoundingClientRect();
+  const sx=(e.clientX-rect.left)/rect.width*GW;
+  const sy=(e.clientY-rect.top)/rect.height*GH;
+  if(sx>=GW-16&&sy<=18){window.open('https://x.com/entropyindex','_blank');}
+});
 loadState().then(()=>requestAnimationFrame(drawFrame));
 setInterval(loadState,30000);
 })();
