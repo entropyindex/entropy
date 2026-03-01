@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-02-28T07:30:00Z",
-  "globalEntropy": 89,
+  "timestamp": "2026-03-01T06:45:00Z",
+  "globalEntropy": 97,
   "totalNodes": 12,
   "infectedNodes": 12,
   "nodes": [
     {
       "id": "twitter-main",
       "name": "Twitter/X",
-      "infection": 97,
-      "trend": "Israel and US launch strikes on Iran — Tehran explosions",
+      "infection": 99,
+      "trend": "Iran Supreme Leader Khamenei confirmed dead in US-Israeli strikes",
       "x": 0.5,
       "y": 0.35,
       "connections": ["crypto-twitter", "ai-twitter", "politics", "media"]
@@ -16,8 +16,8 @@
     {
       "id": "crypto-twitter",
       "name": "Crypto Twitter",
-      "infection": 92,
-      "trend": "BTC flash crash on Iran strike news",
+      "infection": 96,
+      "trend": "BTC dumping — oil spiking — full risk-off panic",
       "x": 0.25,
       "y": 0.2,
       "connections": ["twitter-main", "wallstreetbets", "tech-twitter"]
@@ -25,8 +25,8 @@
     {
       "id": "ai-twitter",
       "name": "AI Twitter",
-      "infection": 88,
-      "trend": "Anthropic federal ban overshadowed by war",
+      "infection": 91,
+      "trend": "All tech discourse replaced by war coverage",
       "x": 0.72,
       "y": 0.18,
       "connections": ["twitter-main", "tech-twitter", "reddit-ml"]
@@ -35,7 +35,7 @@
       "id": "politics",
       "name": "Politics",
       "infection": 99,
-      "trend": "Israel declares state of emergency — US involved in strikes",
+      "trend": "Khamenei dead — IRGC succession crisis — retaliation fears",
       "x": 0.15,
       "y": 0.55,
       "connections": ["twitter-main", "reddit-politics", "media"]
@@ -43,8 +43,8 @@
     {
       "id": "reddit-politics",
       "name": "r/politics",
-      "infection": 95,
-      "trend": "Megathread: US-Israel strike on Iran live updates",
+      "infection": 99,
+      "trend": "Megathread: Khamenei killed — what happens next",
       "x": 0.08,
       "y": 0.75,
       "connections": ["politics", "reddit-all"]
@@ -52,8 +52,8 @@
     {
       "id": "reddit-all",
       "name": "Reddit",
-      "infection": 88,
-      "trend": "Every sub talking about Iran right now",
+      "infection": 95,
+      "trend": "Every subreddit — front page is nothing but Iran",
       "x": 0.4,
       "y": 0.7,
       "connections": ["reddit-politics", "reddit-ml", "gaming", "wallstreetbets"]
@@ -61,8 +61,8 @@
     {
       "id": "reddit-ml",
       "name": "r/MachineLearning",
-      "infection": 61,
-      "trend": "Anthropic drama fading as war takes over",
+      "infection": 72,
+      "trend": "Paper discussion dead — everyone doomscrolling war news",
       "x": 0.65,
       "y": 0.45,
       "connections": ["ai-twitter", "reddit-all", "tech-twitter"]
@@ -70,8 +70,8 @@
     {
       "id": "gaming",
       "name": "Gaming",
-      "infection": 52,
-      "trend": "Gamers doom-scrolling Iran news instead of playing",
+      "infection": 64,
+      "trend": "Servers emptying out — players watching news instead",
       "x": 0.55,
       "y": 0.8,
       "connections": ["reddit-all", "twitch"]
@@ -79,8 +79,8 @@
     {
       "id": "twitch",
       "name": "Twitch",
-      "infection": 68,
-      "trend": "News streams spiking — HasanAbi type channels exploding",
+      "infection": 85,
+      "trend": "News streams 10x normal — HasanAbi 200k+ viewers",
       "x": 0.78,
       "y": 0.72,
       "connections": ["gaming", "twitter-main"]
@@ -88,8 +88,8 @@
     {
       "id": "tech-twitter",
       "name": "Tech Twitter",
-      "infection": 74,
-      "trend": "Oil prices and tech sector impact analysis flooding TL",
+      "infection": 82,
+      "trend": "Oil shock analysis — supply chain disruption fears — markets halted",
       "x": 0.85,
       "y": 0.4,
       "connections": ["crypto-twitter", "ai-twitter", "reddit-ml"]
@@ -97,8 +97,8 @@
     {
       "id": "wallstreetbets",
       "name": "WallStreetBets",
-      "infection": 94,
-      "trend": "Oil calls printing — futures circuit breaker watch",
+      "infection": 99,
+      "trend": "Oil calls 10x — futures halted — defense stocks mooning",
       "x": 0.3,
       "y": 0.45,
       "connections": ["crypto-twitter", "reddit-all"]
@@ -107,7 +107,7 @@
       "id": "media",
       "name": "News Media",
       "infection": 99,
-      "trend": "BREAKING: US and Israel conduct strikes on Iran",
+      "trend": "BREAKING: Iran Supreme Leader Khamenei killed in US-Israeli strikes — state media confirms",
       "x": 0.18,
       "y": 0.35,
       "connections": ["twitter-main", "politics"]
