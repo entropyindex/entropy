@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="demo.png" width="800" />
+  <img src="banner.png" width="600" />
 </p>
 
 <h1 align="center">ENTROPY</h1>
