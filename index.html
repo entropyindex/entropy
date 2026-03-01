@@ -5,13 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENTROPY</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;cursor:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAAgElEQVRYhe3WWwqAIBCF4WO0kNn/qtxJvXRALEjCuRjzQy8Z1HxEBgDHdbi0ed2YFdynL5YPEEeg1goAEJF2Tb14AsxKIq4A05aIL8C0JNYRYLMl1hNgsyTcBfbRC5uJ+7ibfpKIK8CJH96Nn34HunOA0S4ZQuAt1X9Gd4Esy7ITJLQliU3gx1UAAAAASUVORK5CYII=') 0 0, auto}
+*{margin:0;padding:0;box-sizing:border-box;cursor:none!important}
 html,body{width:100%;height:100%;background:#000;overflow:hidden;image-rendering:pixelated;font-family:monospace}
 canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+.pixel-cursor{position:fixed;pointer-events:none;z-index:9999;width:24px;height:24px;image-rendering:pixelated}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<canvas id="cur" class="pixel-cursor" width="24" height="24"></canvas>
+<script>
+(function(){
+const cur=document.getElementById('cur'),cx=cur.getContext('2d');
+cx.imageSmoothingEnabled=false;
+const arrow=[
+[1,0,0,0,0,0,0,0,0,0,0,0],
+[1,1,0,0,0,0,0,0,0,0,0,0],
+[1,2,1,0,0,0,0,0,0,0,0,0],
+[1,2,2,1,0,0,0,0,0,0,0,0],
+[1,2,2,2,1,0,0,0,0,0,0,0],
+[1,2,2,2,2,1,0,0,0,0,0,0],
+[1,2,2,2,2,2,1,0,0,0,0,0],
+[1,2,2,2,2,2,2,1,0,0,0,0],
+[1,2,2,2,2,1,1,1,1,0,0,0],
+[1,2,2,1,2,1,0,0,0,0,0,0],
+[1,1,0,1,2,2,1,0,0,0,0,0],
+[0,0,0,0,1,1,0,0,0,0,0,0],
+];
+for(let y=0;y<arrow.length;y++)for(let x=0;x<arrow[y].length;x++){
+  if(arrow[y][x]===1){cx.fillStyle='#000';cx.fillRect(x*2,y*2,2,2);}
+  if(arrow[y][x]===2){cx.fillStyle='#e0e0e0';cx.fillRect(x*2,y*2,2,2);}
+}
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+document.addEventListener('mouseleave',()=>{cur.style.display='none';});
+document.addEventListener('mouseenter',()=>{cur.style.display='block';});
+})();
+</script>
 
 <script>
 (function(){
