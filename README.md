@@ -31,7 +31,20 @@ every corner of the internet generates chaos — drama, panic, hype, outrage. it
 
 > it's not sentiment analysis. it's a chaos index.
 
-## how infection is calculated
+## how it works
+
+```
+twitter ──┐                                    ┌── infection map
+          ├── engine ── chaos scoring ── json ──┤
+reddit  ──┘                                    └── global entropy %
+```
+
+1. **crawl** — pull posts from twitter and reddit across 12 community nodes
+2. **score** — analyze chaos signals: negative sentiment, controversy ratios, engagement spikes, chaos keywords
+3. **spread** — high-infection nodes (>70%) bleed chaos into connected communities
+4. **render** — canvas visualization with real-time infection particles, pulsing nodes, and a global entropy counter
+
+### infection formula
 
 ```
 infection(node) = topic_velocity × community_bleed × sentiment_divergence
@@ -43,7 +56,7 @@ infection(node) = topic_velocity × community_bleed × sentiment_divergence
 | `community_bleed` | % of foreign topics invading a community |
 | `sentiment_divergence` | how far current mood deviates from 30-day average |
 
-when all three spike across multiple nodes simultaneously — that's not noise. that's the internet converging on one thing.
+when all three spike across multiple nodes simultaneously — that's not noise. that's convergence.
 
 ## the 12 nodes
 
