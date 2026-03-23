@@ -4,16 +4,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Solana](https://img.shields.io/badge/Solana-Program%20Library-purple)](https://solana.com)
 
-<div align="center">
-
-```rust
-// test token — experimental, use at your own risk
-const ANVIL_TOKEN: &str = "3XXw3FN2ZotW6JyG55HJsyZR3swArDmtBDv4wrhRANVL";
-```
-
-[![Solana Token](https://img.shields.io/badge/ANVL-Solana-9945FF?style=for-the-badge&logo=solana&logoColor=white)](https://solscan.io/token/3XXw3FN2ZotW6JyG55HJsyZR3swArDmtBDv4wrhRANVL)
-
-</div>
 
 
 > Anvil away the bloat from your cross-program calls.
