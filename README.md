@@ -1,6 +1,6 @@
 # anvil 🔨
 
-[![Crates.io](https://img.shields.io/badge/crates.io-v0.1.0-orange)](https://crates.io/crates/chisel-cpi)
+![Crates.io](https://img.shields.io/badge/crates.io-v0.1.0-orange)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Solana](https://img.shields.io/badge/Solana-Program%20Library-purple)](https://solana.com)
 
